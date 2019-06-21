@@ -29,6 +29,8 @@ func TestToPostfix(t *testing.T) {
 		{"-2*(x+2)^2", "-2 x 2 + 2 ^ *", nil},
 		{"1^-2", "1 -2 ^", nil},
 		{"2*sin(x)", "2 x sin *", nil},
+		{"2*-sin(x)", "2 x -sin *", nil},
+		{"2*-sin(-x^-2)-2*-1", "2 -x -2 ^ -sin * 2 -1 * -", nil},
 	}
 
 	for _, test := range tests {

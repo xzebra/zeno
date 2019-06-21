@@ -3,6 +3,7 @@ package zeno
 import (
 	"bytes"
 	"fmt"
+	"strings"
 
 	Stack "github.com/emirpasic/gods/stacks/linkedliststack"
 )
@@ -10,19 +11,7 @@ import (
 // parseNum returns the parsed num and the end position of it
 func parseNum(exp string, i int) (string, int) {
 	n := len(exp)
-	negativeSigns := 0
 	begin := i
-	for i < n && exp[i] == '-' {
-		// in case user is really bored and started to add negative
-		// signs before a number
-		negativeSigns++
-		i++
-	}
-	if negativeSigns%2 != 0 {
-		begin = i - 1
-	} else {
-		begin = i
-	}
 
 	for i < n && (isNum(string(exp[i])) || exp[i] == '.') {
 		i++
@@ -37,6 +26,7 @@ func ToPostfix(exp string) (string, error) {
 	operatorStack := Stack.New()
 	postfix := bytes.Buffer{}
 	funcName := "" // temp string to parse func names
+	negative := false
 
 	// while there are tokens to be read
 	for i := 0; i < len(exp); i++ {
@@ -49,7 +39,9 @@ func ToPostfix(exp string) (string, error) {
 		if isNum(c) {
 			num := ""
 			num, i = parseNum(exp, i)
-			postfix.WriteString(num + " ")
+			postfix.WriteString(signedExpression(num, negative))
+			negative = false
+			postfix.WriteByte(' ')
 		} else if c == ")" {
 			found := false
 			for !operatorStack.Empty() {
@@ -71,9 +63,8 @@ func ToPostfix(exp string) (string, error) {
 			if !isFunc && c == "-" {
 				// check if subtracting or is the negative sign of a number
 				if i == 0 || isOperator(string(exp[i-1])) {
-					num := ""
-					num, i = parseNum(exp, i)
-					postfix.WriteString(num + " ")
+					// negative sign
+					negative = isNegative(exp, &i)
 					continue
 				}
 			}
@@ -91,14 +82,17 @@ func ToPostfix(exp string) (string, error) {
 				postfix.WriteByte(' ')
 			}
 			if isFunc {
-				operatorStack.Push(funcName)
+				operatorStack.Push(signedExpression(funcName, negative))
+				negative = false
 				funcName = ""
 			} else {
-				operatorStack.Push(c)
+				operatorStack.Push(signedExpression(c, negative))
+				negative = false
 			}
 		} else {
 			// token is a variable
-			postfix.WriteString(c)
+			postfix.WriteString(signedExpression(c, negative))
+			negative = false
 			postfix.WriteByte(' ')
 		}
 	}
@@ -111,4 +105,16 @@ func ToPostfix(exp string) (string, error) {
 	}
 
 	return postfix.String()[:postfix.Len()-1], nil
+}
+
+func PostfixToTree(postfix string) *Operation {
+	tokens := strings.Split(postfix, " ")
+	for _, token := range tokens {
+		if isOperator(token) {
+
+		} else if isNum(string(token[0])) {
+
+		}
+	}
+	return nil
 }

@@ -4,6 +4,9 @@ import "math"
 
 var (
 	mappedFunctions = map[string]func(x, y *Operation) float64{
+		"neg": func(x, y *Operation) float64 {
+			return -x.Operate()
+		},
 		"sin": func(x, y *Operation) float64 {
 			return math.Sin(x.Operate())
 		},

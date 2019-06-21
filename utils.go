@@ -1,5 +1,25 @@
 package zeno
 
+func isNegative(exp string, i *int) bool {
+	n := len(exp)
+	negativeSigns := 0
+	for *i < n && exp[*i] == '-' {
+		// in case user is really bored and started to add negative
+		// signs before a number
+		negativeSigns++
+		*i++
+	}
+	*i--
+	return negativeSigns%2 != 0
+}
+
+func signedExpression(exp string, signed bool) string {
+	if signed {
+		exp = "-" + exp
+	}
+	return exp
+}
+
 func isNum(c string) bool {
 	return c >= "0" && c <= "9"
 }
