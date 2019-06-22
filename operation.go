@@ -26,3 +26,13 @@ type Operation struct {
 func (o *Operation) Operate() float64 {
 	return o.Operator.Operate(o.Left, o.Right)
 }
+
+func signedOperation(op *Operation, negate bool) *Operation {
+	if negate {
+		return &Operation{
+			Operator: &Function{Name: "neg"},
+			Left:     op, Right: nil,
+		}
+	}
+	return op
+}

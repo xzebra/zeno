@@ -3,6 +3,7 @@ package zeno
 import (
 	"bytes"
 	"fmt"
+	"strconv"
 	"strings"
 
 	Stack "github.com/emirpasic/gods/stacks/linkedliststack"
@@ -86,8 +87,7 @@ func ToPostfix(exp string) (string, error) {
 				negative = false
 				funcName = ""
 			} else {
-				operatorStack.Push(signedExpression(c, negative))
-				negative = false
+				operatorStack.Push(c)
 			}
 		} else {
 			// token is a variable
@@ -107,14 +107,64 @@ func ToPostfix(exp string) (string, error) {
 	return postfix.String()[:postfix.Len()-1], nil
 }
 
+// PostfixToTree translate a postfix expression into a
+// binary tree data structure that can operate the expression
 func PostfixToTree(postfix string) *Operation {
+	stack := Stack.New()
 	tokens := strings.Split(postfix, " ")
 	for _, token := range tokens {
 		if isOperator(token) {
+			y, _ := stack.Pop()
+			x, _ := stack.Pop()
+			stack.Push(&Operation{
+				Operator: &SimpleOperator{Type: token[0]},
+				Left:     x.(*Operation),
+				Right:    y.(*Operation),
+			})
+		} else {
+			// store negative boolean but remove '-' from token
+			negative := token[0] == '-'
+			if negative {
+				token = token[1:]
+			}
 
-		} else if isNum(string(token[0])) {
+			if isNum(string(token[0])) {
+				// constant expression
+				val, _ := strconv.ParseFloat(token, 64)
+				stack.Push(signedOperation(&Operation{
+					Operator: &Constant{Value: val},
+					Left:     nil, Right: nil,
+				}, negative))
+			} else if len(token) > 1 {
+				// function
+				head, _ := stack.Pop()
+				x := head.(*Operation)
+				var y *Operation
+				if args := functionArgs[token]; args == 2 {
+					head, _ = stack.Pop()
+					y = head.(*Operation)
+				}
 
+				stack.Push(signedOperation(&Operation{
+					Operator: &Function{Name: token},
+					Left:     x, Right: y,
+				}, negative))
+			} else {
+				// variable
+				// TODO
+			}
 		}
 	}
-	return nil
+
+	out, _ := stack.Pop()
+	return out.(*Operation)
+}
+
+func CalculateExpression(exp string) (float64, error) {
+	postfix, err := ToPostfix(exp)
+	if err != nil {
+		return 0, err
+	}
+	operation := PostfixToTree(postfix)
+	return operation.Operate(), nil
 }

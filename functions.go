@@ -3,6 +3,10 @@ package zeno
 import "math"
 
 var (
+	functionArgs = map[string]int{
+		"neg": 1, "sin": 1, "cos": 1, "tan": 1,
+		"max": 2, "min": 2,
+	}
 	mappedFunctions = map[string]func(x, y *Operation) float64{
 		"neg": func(x, y *Operation) float64 {
 			return -x.Operate()
