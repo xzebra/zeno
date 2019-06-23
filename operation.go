@@ -1,7 +1,10 @@
 package zeno
 
+import "strconv"
+
 type Operator interface {
 	Operate(x, y *Operation) float64
+	LaTeX(x, y *Operation) string
 }
 
 type Constant struct {
@@ -10,6 +13,10 @@ type Constant struct {
 
 func (c *Constant) Operate(x, y *Operation) float64 {
 	return c.Value
+}
+
+func (c *Constant) LaTeX(x, y *Operation) string {
+	return strconv.FormatFloat(c.Value, 'f', -1, 64)
 }
 
 // Operation is a binary tree containing the operands
@@ -25,6 +32,10 @@ type Operation struct {
 
 func (o *Operation) Operate() float64 {
 	return o.Operator.Operate(o.Left, o.Right)
+}
+
+func (o *Operation) LaTeX() string {
+	return o.Operator.LaTeX(o.Left, o.Right)
 }
 
 func signedOperation(op *Operation, negate bool) *Operation {

@@ -9,6 +9,10 @@ import (
 	Stack "github.com/emirpasic/gods/stacks/linkedliststack"
 )
 
+var (
+	ErrorParenthesis = fmt.Errorf("mismatched parenthesis")
+)
+
 // parseNum returns the parsed num and the end position of it
 func parseNum(exp string, i int) (string, int) {
 	n := len(exp)
@@ -32,7 +36,7 @@ func ToPostfix(exp string) (string, error) {
 	// while there are tokens to be read
 	for i := 0; i < len(exp); i++ {
 		c := string(exp[i]) // read token
-		if c == " " {
+		if c == " " || c == "," {
 			// ignore spaces
 			continue
 		}
@@ -57,7 +61,7 @@ func ToPostfix(exp string) (string, error) {
 				}
 			}
 			if !found {
-				return "", fmt.Errorf("toPostfix: mismatched parenthesis")
+				return "", ErrorParenthesis
 			}
 		} else if isOperator(c) || isFunc(&i, exp, &funcName) {
 			isFunc := len(funcName) > 1
@@ -141,6 +145,7 @@ func PostfixToTree(postfix string) *Operation {
 				x := head.(*Operation)
 				var y *Operation
 				if args := functionArgs[token]; args == 2 {
+					println(token)
 					head, _ = stack.Pop()
 					y = head.(*Operation)
 				}
