@@ -166,10 +166,18 @@ func PostfixToTree(postfix string) *Operation {
 }
 
 func CalculateExpression(exp string) (float64, error) {
-	postfix, err := ToPostfix(exp)
+	tree, err := ToTree(exp)
 	if err != nil {
 		return 0, err
 	}
-	operation := PostfixToTree(postfix)
-	return operation.Operate(), nil
+	return tree.Operate(), nil
+}
+
+func ToTree(exp string) (*Operation, error) {
+	postfix, err := ToPostfix(exp)
+	if err != nil {
+		return nil, err
+	}
+	tree := PostfixToTree(postfix)
+	return tree, nil
 }
