@@ -12,16 +12,16 @@ var (
 	}
 	mappedFunctions = map[string]func(x, y *Operation) float64{
 		"neg": func(x, y *Operation) float64 {
-			return -x.Operate()
+			return -y.Operate()
 		},
 		"sin": func(x, y *Operation) float64 {
-			return math.Sin(x.Operate())
+			return math.Sin(y.Operate())
 		},
 		"cos": func(x, y *Operation) float64 {
-			return math.Cos(x.Operate())
+			return math.Cos(y.Operate())
 		},
 		"tan": func(x, y *Operation) float64 {
-			return math.Tan(x.Operate())
+			return math.Tan(y.Operate())
 		},
 		"max": func(x, y *Operation) float64 {
 			return math.Max(x.Operate(), y.Operate())
@@ -31,7 +31,7 @@ var (
 		},
 		"log": func(x, y *Operation) float64 {
 			// log<b>(x) = log(x)/log(b)
-			return math.Log(x.Operate()) / math.Log(y.Operate())
+			return math.Log(y.Operate()) / math.Log(x.Operate())
 		},
 	}
 
@@ -57,7 +57,7 @@ func (f *Function) LaTeX(x, y *Operation) string {
 	} else {
 		args := functionArgs[f.Name]
 		if args == 1 {
-			return fmt.Sprintf("%s(%s)", f.Name, x.LaTeX())
+			return fmt.Sprintf("%s(%s)", f.Name, y.LaTeX())
 		} else if args == 2 {
 			return fmt.Sprintf("%s(%s,%s)", f.Name, x.LaTeX(), y.LaTeX())
 		}

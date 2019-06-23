@@ -10,7 +10,10 @@ import (
 )
 
 var (
-	ErrorParenthesis = fmt.Errorf("mismatched parenthesis")
+	ErrorParenthesis   = fmt.Errorf("mismatched parenthesis")
+	ErrorUnknownSymbol = fmt.Errorf("unknown symbol")
+	ErrorEmptyString   = fmt.Errorf("cannot parse empty string")
+	ErrorNotEnoughArgs = fmt.Errorf("no args in function call")
 )
 
 // parseNum returns the parsed num and the end position of it
@@ -28,6 +31,9 @@ func parseNum(exp string, i int) (string, int) {
 // or an error if input format is wrong
 // ex: 1+2*2 -> 1 2 2 * +
 func ToPostfix(exp string) (string, error) {
+	if len(exp) == 0 {
+		return "", ErrorEmptyString
+	}
 	operatorStack := Stack.New()
 	postfix := bytes.Buffer{}
 	funcName := "" // temp string to parse func names
@@ -93,11 +99,13 @@ func ToPostfix(exp string) (string, error) {
 			} else {
 				operatorStack.Push(c)
 			}
-		} else {
+		} else if isLetter(c) {
 			// token is a variable
 			postfix.WriteString(signedExpression(c, negative))
 			negative = false
 			postfix.WriteByte(' ')
+		} else {
+			return "", ErrorUnknownSymbol
 		}
 	}
 
@@ -113,7 +121,7 @@ func ToPostfix(exp string) (string, error) {
 
 // PostfixToTree translate a postfix expression into a
 // binary tree data structure that can operate the expression
-func PostfixToTree(postfix string) *Operation {
+func PostfixToTree(postfix string) (*Operation, error) {
 	stack := Stack.New()
 	tokens := strings.Split(postfix, " ")
 	for _, token := range tokens {
@@ -142,12 +150,17 @@ func PostfixToTree(postfix string) *Operation {
 			} else if len(token) > 1 {
 				// function
 				head, _ := stack.Pop()
-				x := head.(*Operation)
-				var y *Operation
+				if head == nil {
+					return nil, ErrorNotEnoughArgs
+				}
+				y := head.(*Operation)
+				var x *Operation
 				if args := functionArgs[token]; args == 2 {
-					println(token)
 					head, _ = stack.Pop()
-					y = head.(*Operation)
+					if head == nil {
+						return nil, ErrorNotEnoughArgs
+					}
+					x = head.(*Operation)
 				}
 
 				stack.Push(signedOperation(&Operation{
@@ -162,7 +175,7 @@ func PostfixToTree(postfix string) *Operation {
 	}
 
 	out, _ := stack.Pop()
-	return out.(*Operation)
+	return out.(*Operation), nil
 }
 
 func CalculateExpression(exp string) (float64, error) {
@@ -178,6 +191,6 @@ func ToTree(exp string) (*Operation, error) {
 	if err != nil {
 		return nil, err
 	}
-	tree := PostfixToTree(postfix)
-	return tree, nil
+	tree, err := PostfixToTree(postfix)
+	return tree, err
 }

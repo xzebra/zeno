@@ -32,6 +32,7 @@ func TestToPostfix(t *testing.T) {
 		{"2*-sin(x)", "2 x -sin *"},
 		{"2*-sin(-x^-2)-2*-1", "2 -x -2 ^ -sin * 2 -1 * -"},
 		{"min(1, 2)", "1 2 min"}, // ignore commas
+		{"", ""},
 	}
 
 	for _, test := range tests {
@@ -81,7 +82,7 @@ func TestLaTeX(t *testing.T) {
 
 	for _, test := range tests {
 		postfix, _ := zeno.ToPostfix(test.expression)
-		tree := zeno.PostfixToTree(postfix)
+		tree, _ := zeno.PostfixToTree(postfix)
 		result := tree.LaTeX()
 		assert(t, result == test.expected,
 			fmt.Sprintf("TestLaTeX(%s) = %s, should be %s",
