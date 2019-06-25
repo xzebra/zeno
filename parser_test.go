@@ -32,7 +32,6 @@ func TestToPostfix(t *testing.T) {
 		{"2*-sin(x)", "2 x -sin *"},
 		{"2*-sin(-x^-2)-2*-1", "2 -x -2 ^ -sin * 2 -1 * -"},
 		{"min(1, 2)", "1 2 min"}, // ignore commas
-		{"", ""},
 	}
 
 	for _, test := range tests {

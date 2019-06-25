@@ -42,7 +42,7 @@ func signedOperation(op *Operation, negate bool) *Operation {
 	if negate {
 		return &Operation{
 			Operator: &Function{Name: "neg"},
-			Left:     op, Right: nil,
+			Left:     nil, Right: op,
 		}
 	}
 	return op
