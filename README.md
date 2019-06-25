@@ -5,7 +5,7 @@
 - Generating a postfix equivalent to given expression
 - Create a binary operation tree
 - Calculate the result of the expression (without variables)
-- Generate $\LaTeX$ representation of an operation tree
+- Generate LaTeX representation of an operation tree
 
 ## Install
 
