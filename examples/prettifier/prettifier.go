@@ -7,7 +7,7 @@ import (
 	"strings"
 	"text/template"
 
-	"zeno"
+	"github.com/xzebra/zeno"
 )
 
 // Demo website capable of display "pretty" math expressions

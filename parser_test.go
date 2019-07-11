@@ -1,11 +1,9 @@
-package zeno_test
+package zeno
 
 import (
 	"fmt"
 	"math"
 	"testing"
-
-	"zeno"
 )
 
 func assert(t *testing.T, condition bool, msg string) {
@@ -35,7 +33,7 @@ func TestToPostfix(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result, _ := zeno.ToPostfix(test.expression)
+		result, _ := ToPostfix(test.expression)
 		assert(t, result == test.expected,
 			fmt.Sprintf("TestToPostfix(%s) returned %s instead of %s",
 				test.expression, result, test.expected),
@@ -62,7 +60,7 @@ func TestCalculateExpression(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result, _ := zeno.CalculateExpression(test.expression)
+		result, _ := CalculateExpression(test.expression)
 		assert(t, result == test.expected,
 			fmt.Sprintf("TestCalculateExpression(%s) = %f, should be %f",
 				test.expression, result, test.expected),
@@ -81,8 +79,8 @@ func TestLaTeX(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		postfix, _ := zeno.ToPostfix(test.expression)
-		tree, _ := zeno.PostfixToTree(postfix)
+		postfix, _ := ToPostfix(test.expression)
+		tree, _ := PostfixToTree(postfix)
 		result := tree.LaTeX()
 		assert(t, result == test.expected,
 			fmt.Sprintf("TestLaTeX(%s) = %s, should be %s",
