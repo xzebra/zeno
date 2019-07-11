@@ -3,7 +3,7 @@ package zeno
 import "strconv"
 
 type Operator interface {
-	Operate(x, y *Operation) float64
+	Operate(x, y *Operation) (float64, error)
 	LaTeX(x, y *Operation) string
 }
 
@@ -11,8 +11,8 @@ type Constant struct {
 	Value float64
 }
 
-func (c *Constant) Operate(x, y *Operation) float64 {
-	return c.Value
+func (c *Constant) Operate(x, y *Operation) (float64, error) {
+	return c.Value, nil
 }
 
 func (c *Constant) LaTeX(x, y *Operation) string {
@@ -30,7 +30,7 @@ type Operation struct {
 	Right *Operation
 }
 
-func (o *Operation) Operate() float64 {
+func (o *Operation) Operate() (float64, error) {
 	return o.Operator.Operate(o.Left, o.Right)
 }
 

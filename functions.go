@@ -10,28 +10,31 @@ var (
 		"neg": 1, "sin": 1, "cos": 1, "tan": 1,
 		"max": 2, "min": 2, "log": 2,
 	}
-	mappedFunctions = map[string]func(x, y *Operation) float64{
-		"neg": func(x, y *Operation) float64 {
-			return -y.Operate()
+	mappedFunctions = map[string]func(x, y float64) (float64, error){
+		"neg": func(x, y float64) (float64, error) {
+			return -y, nil
 		},
-		"sin": func(x, y *Operation) float64 {
-			return math.Sin(y.Operate())
+		"sin": func(x, y float64) (float64, error) {
+			return math.Sin(y), nil
 		},
-		"cos": func(x, y *Operation) float64 {
-			return math.Cos(y.Operate())
+		"cos": func(x, y float64) (float64, error) {
+			return math.Cos(y), nil
 		},
-		"tan": func(x, y *Operation) float64 {
-			return math.Tan(y.Operate())
+		"tan": func(x, y float64) (float64, error) {
+			return math.Tan(y), nil
 		},
-		"max": func(x, y *Operation) float64 {
-			return math.Max(x.Operate(), y.Operate())
+		"max": func(x, y float64) (float64, error) {
+			return math.Max(x, y), nil
 		},
-		"min": func(x, y *Operation) float64 {
-			return math.Min(x.Operate(), y.Operate())
+		"min": func(x, y float64) (float64, error) {
+			return math.Min(x, y), nil
 		},
-		"log": func(x, y *Operation) float64 {
+		"log": func(x, y float64) (float64, error) {
 			// log<b>(x) = log(x)/log(b)
-			return math.Log(y.Operate()) / math.Log(x.Operate())
+			if x == 1 {
+				return 0, ErrorZeroDivision
+			}
+			return math.Log(y) / math.Log(x), nil
 		},
 	}
 
@@ -47,8 +50,20 @@ type Function struct {
 	Name string
 }
 
-func (f *Function) Operate(x, y *Operation) float64 {
-	return mappedFunctions[f.Name](x, y)
+func (f *Function) Operate(x, y *Operation) (float64, error) {
+	args := functionArgs[f.Name]
+	right, err := y.Operate()
+	if err != nil {
+		return 0, err
+	}
+	left := float64(0)
+	if args == 2 {
+		left, err = x.Operate()
+		if err != nil {
+			return 0, err
+		}
+	}
+	return mappedFunctions[f.Name](left, right)
 }
 
 func (f *Function) LaTeX(x, y *Operation) string {
@@ -62,5 +77,5 @@ func (f *Function) LaTeX(x, y *Operation) string {
 			return fmt.Sprintf("%s(%s,%s)", f.Name, x.LaTeX(), y.LaTeX())
 		}
 	}
-	return "" // what did the client made to get here
+	return "" // haks
 }

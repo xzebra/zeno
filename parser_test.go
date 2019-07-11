@@ -58,6 +58,7 @@ func TestCalculateExpression(t *testing.T) {
 		{"min(1,2)", 1},
 		{"max(1,2)", 2},
 		{"log(2,8)", 3},
+		{"x+1", 0},
 	}
 
 	for _, test := range tests {

@@ -30,11 +30,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := strconv.FormatFloat(tree.Operate(), 'f', -1, 64)
+	result, err := tree.Operate()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 	temp.Execute(w, struct{ Expression, Result string }{
 		Expression: tree.LaTeX(),
-		Result:     result,
+		Result:     strconv.FormatFloat(result, 'f', -1, 64),
 	})
 }
 

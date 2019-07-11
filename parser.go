@@ -145,7 +145,6 @@ func PostfixToTree(postfix string) (*Operation, error) {
 				val, _ := strconv.ParseFloat(token, 64)
 				stack.Push(signedOperation(&Operation{
 					Operator: &Constant{Value: val},
-					Left:     nil, Right: nil,
 				}, negative))
 			} else if len(token) > 1 {
 				// function
@@ -168,8 +167,9 @@ func PostfixToTree(postfix string) (*Operation, error) {
 					Left:     x, Right: y,
 				}, negative))
 			} else {
-				// variable
-				// TODO
+				stack.Push(signedOperation(&Operation{
+					Operator: &Variable{Name: token},
+				}, negative))
 			}
 		}
 	}
@@ -183,7 +183,7 @@ func CalculateExpression(exp string) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return tree.Operate(), nil
+	return tree.Operate()
 }
 
 func ToTree(exp string) (*Operation, error) {
