@@ -46,6 +46,7 @@ var (
 	}
 )
 
+// Function represents a mathematical function
 type Function struct {
 	Name string
 }

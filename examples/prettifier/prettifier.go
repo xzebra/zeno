@@ -11,7 +11,7 @@ import (
 )
 
 // Demo website capable of display "pretty" math expressions
-// acording to url path.
+// according to url path.
 //
 // ex: localhost:8080/3+2/5
 

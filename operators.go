@@ -42,6 +42,7 @@ var (
 	}
 )
 
+// SimpleOperator represents basic operators such as addition, subtraction...
 type SimpleOperator struct {
 	Type byte
 }

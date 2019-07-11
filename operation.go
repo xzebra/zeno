@@ -2,11 +2,13 @@ package zeno
 
 import "strconv"
 
+// Operator is the representation of a math expression operator.
 type Operator interface {
 	Operate(x, y *Operation) (float64, error)
 	LaTeX(x, y *Operation) string
 }
 
+// Constant represents a numeric constant expression
 type Constant struct {
 	Value float64
 }

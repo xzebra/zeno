@@ -28,8 +28,7 @@ func parseNum(exp string, i int) (string, int) {
 }
 
 // ToPostfix returns the postfix representation of the input expression
-// or an error if input format is wrong
-// ex: 1+2*2 -> 1 2 2 * +
+// or an error if input format is wrong.
 func ToPostfix(exp string) (string, error) {
 	if len(exp) == 0 {
 		return "", ErrorEmptyString
@@ -119,8 +118,8 @@ func ToPostfix(exp string) (string, error) {
 	return postfix.String()[:postfix.Len()-1], nil
 }
 
-// PostfixToTree translate a postfix expression into a
-// binary tree data structure that can operate the expression
+// PostfixToTree translates a postfix expression into a
+// binary tree data structure that can operate the expression.
 func PostfixToTree(postfix string) (*Operation, error) {
 	stack := Stack.New()
 	tokens := strings.Split(postfix, " ")
@@ -178,6 +177,8 @@ func PostfixToTree(postfix string) (*Operation, error) {
 	return out.(*Operation), nil
 }
 
+// CalculateExpression returns the numerical value of the input expression or
+// an error in case something went wrong.
 func CalculateExpression(exp string) (float64, error) {
 	tree, err := ToTree(exp)
 	if err != nil {
@@ -186,6 +187,8 @@ func CalculateExpression(exp string) (float64, error) {
 	return tree.Operate()
 }
 
+// ToTree parses an expression and returns a binary tree representation of it
+// or an error if a wrong format was used.
 func ToTree(exp string) (*Operation, error) {
 	postfix, err := ToPostfix(exp)
 	if err != nil {

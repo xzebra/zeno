@@ -2,6 +2,8 @@ package zeno
 
 import "fmt"
 
+// Variable represent single character expression tokens.
+// f.e.: "x" in "x + 1"
 type Variable struct {
 	Name string
 }

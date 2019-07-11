@@ -1,5 +1,7 @@
 # zeno
 
+[![GoDoc](https://godoc.org/github.com/xzebra/zeno?status.svg)](https://godoc.org/github.com/xzebra/zeno) [![Go Report Card](https://goreportcard.com/badge/github.com/xzebra/zeno)](https://goreportcard.com/report/github.com/xzebra/zeno)
+
 **zeno** is a math expression parser capable of:
 
 - Generating a postfix equivalent to given expression
