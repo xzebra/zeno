@@ -1,6 +1,6 @@
 # zeno
 
-[![Build Status](https://travis-ci.org/xzebra/zeno.png?branch=master)](https://travis-ci.org/xzebra/zeno) [![GoDoc](https://godoc.org/github.com/xzebra/zeno?status.svg)](https://godoc.org/github.com/xzebra/zeno) [![Go Report Card](https://goreportcard.com/badge/github.com/xzebra/zeno)](https://goreportcard.com/report/github.com/xzebra/zeno)
+[![Build Status](https://travis-ci.com/xzebra/zeno.svg?branch=master)](https://travis-ci.com/xzebra/zeno) [![GoDoc](https://godoc.org/github.com/xzebra/zeno?status.svg)](https://godoc.org/github.com/xzebra/zeno) [![Go Report Card](https://goreportcard.com/badge/github.com/xzebra/zeno)](https://goreportcard.com/report/github.com/xzebra/zeno)
 
 **zeno** is a math expression parser capable of:
 
