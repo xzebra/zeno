@@ -70,13 +70,15 @@ func (f *Function) Operate(x, y *Operation) (float64, error) {
 func (f *Function) LaTeX(x, y *Operation) string {
 	if specialLatex, isSpecial := latexFunctions[f.Name]; isSpecial {
 		return specialLatex(x, y)
-	} else {
-		args := functionArgs[f.Name]
-		if args == 1 {
-			return fmt.Sprintf("%s(%s)", f.Name, y.LaTeX())
-		} else if args == 2 {
-			return fmt.Sprintf("%s(%s,%s)", f.Name, x.LaTeX(), y.LaTeX())
-		}
 	}
+
+	args := functionArgs[f.Name]
+	if args == 1 {
+		return fmt.Sprintf("%s(%s)", f.Name, y.LaTeX())
+	}
+	if args == 2 {
+		return fmt.Sprintf("%s(%s,%s)", f.Name, x.LaTeX(), y.LaTeX())
+	}
+
 	return "" // haks
 }
